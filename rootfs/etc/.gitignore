@@ -1,0 +1,7 @@
+debian_version
+fake-hwclock.data
+group-
+ld.so.cache
+passwd-
+resolv.conf*
+*shadow-

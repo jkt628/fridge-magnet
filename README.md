@@ -1,2 +1,3 @@
-# rpi-ElecLab-7-HDMI
+# fridge-magnet
+
 Configuration overlay after imaging raspios
