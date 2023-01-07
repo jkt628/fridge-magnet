@@ -41,7 +41,7 @@ phase1() {
 }
 
 postinstall() {
-  true
+  pip install bleak construct
 }
 
 case "$1" in

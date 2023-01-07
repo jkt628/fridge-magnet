@@ -1,0 +1,52 @@
+#!/usr/bin/env -S python3 -u
+"""Scan for TILT hydrometers.
+
+based on https://koen.vervloesem.eu/blog/decoding-bluetooth-low-energy-advertisements-with-python-bleak-and-construct/
+"""
+import asyncio, json
+
+from construct import Array, Byte, Const, Int8sl, Int16ub, Struct
+from construct.core import ConstError
+
+from bleak import BleakScanner
+from bleak.backends.device import BLEDevice
+from bleak.backends.scanner import AdvertisementData
+
+ibeacon_format = Struct(
+    "type_length" / Const(b"\x02\x15"),
+    "uuid" / Array(16, Byte),
+    "major" / Int16ub,
+    "minor" / Int16ub,
+    "tx_power" / Int8sl,
+)
+
+
+async def main():
+    """Scan for devices."""
+    stop_event = asyncio.Event()
+
+    def device_found(device: BLEDevice, advertisement_data: AdvertisementData):
+        """Decode iBeacon."""
+        try:
+            apple_data = advertisement_data.manufacturer_data[0x004C]
+            ibeacon = ibeacon_format.parse(apple_data)
+            if ibeacon.uuid[0] != 0xA4 or ibeacon.uuid[1] != 0x95:
+                return
+            del ibeacon._io
+            del ibeacon.type_length
+            ibeacon.uuid = bytes(ibeacon.uuid).hex()
+            ibeacon.rssi = device.rssi
+            ibeacon.mac = device.address.lower()
+            print(json.dumps(ibeacon))
+        except KeyError:
+            # Apple company ID (0x004c) not found
+            pass
+        except ConstError:
+            # No iBeacon (type 0x02 and length 0x15)
+            pass
+
+    async with BleakScanner(device_found) as scanner:
+        await stop_event.wait()
+
+
+asyncio.run(main())
