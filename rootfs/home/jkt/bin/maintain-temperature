@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+PROG=${0##*/}
+# configuration
+: "${COLOR=${1:-BLUE}}"
+: "${DUTY_CYCLE:=120}"
+: "${SCANNER=${2:-tiltscan}}"
+: "${SHARE:=$HOME/.local/share/$PROG}"
+
+declare -a bool=(off on)
+declare -a colors=(
+	[1]=RED
+	[2]=GREEN
+	[3]=BLACK
+	[4]=PURPLE
+	[5]=ORANGE
+	[6]=BLUE
+	[7]=YELLOW
+	[8]=PINK
+)
+declare -A ifttt=(
+	[BLUE, cooler, off]=https://maker.ifttt.com/trigger/turn_off_fridge/with/key/${IFTTT_KEY}
+	[BLUE, cooler, on]=https://maker.ifttt.com/trigger/turn_on_fridge/with/key/${IFTTT_KEY}
+)
+cycle=0
+cooling=2 heating=2 # unknown state at start
+
+
+turn_off_BLUE_cooler() {
+	curl -w '\n' "${ifttt[BLUE, cooler, off]}"
+}
+
+
+turn_on_BLUE_cooler() {
+	curl -w '\n' "${ifttt[BLUE, cooler, on]}"
+}
+
+
+for (( ; ; )); do
+	"$SCANNER" | jq --unbuffered -r '[.uuid, .major] | @tsv' | while read -r -t "$DUTY_CYCLE" uuid temperature; do
+		((cycle < EPOCHSECONDS)) || continue
+		color=${colors[${uuid:6:1}]}
+		[[ "$color" == "$COLOR" ]] || continue
+		desired=$(<"$SHARE/$color")
+		cooler=$((temperature > desired))
+		heater=$((temperature < desired))
+		((cooling != cooler)) && {
+			turn_"${bool[$cooler]}"_"$color"_cooler
+			cooling=$cooler
+		}
+		((heating != heater)) && {
+			turn_"${bool[$heater]}"_"$color"_heater
+			heating=$heater
+		}
+		cycle=$((EPOCHSECONDS + DUTY_CYCLE))
+	done
+done
