@@ -4,7 +4,7 @@ PROG=${0##*/}
 : "${COLOR=${1:-BLUE}}"
 : "${DUTY_CYCLE:=120}"
 : "${SCANNER=${2:-tiltscan}}"
-: "${SHARE:=$HOME/.local/share/$PROG}"
+: "${CONFIG:=$HOME/.config/jkt628/temperature}"
 
 declare -a bool=(off on)
 declare -a colors=(
@@ -40,15 +40,17 @@ for (( ; ; )); do
 		((cycle < EPOCHSECONDS)) || continue
 		color=${colors[${uuid:6:1}]}
 		[[ "$color" == "$COLOR" ]] || continue
-		desired=$(<"$SHARE/$color")
+		desired=$(<"$CONFIG/$color")
 		cooler=$((temperature > desired))
 		heater=$((temperature < desired))
 		((cooling != cooler)) && {
-			turn_"${bool[$cooler]}"_"$color"_cooler
+			echo -n "$(date '+%F %T ')" "$PROG"
+			"turn_${bool[$cooler]}_${color}_cooler"
 			cooling=$cooler
 		}
 		((heating != heater)) && {
-			turn_"${bool[$heater]}"_"$color"_heater
+			echo -n "$(date '+%F %T ')" "$PROG"
+			"turn_${bool[$heater]}_${color}_heater"
 			heating=$heater
 		}
 		cycle=$((EPOCHSECONDS + DUTY_CYCLE))
