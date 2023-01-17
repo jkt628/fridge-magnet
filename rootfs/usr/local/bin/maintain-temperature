@@ -37,10 +37,10 @@ turn_on_BLUE_cooler() {
 
 for (( ; ; )); do
 	"$SCANNER" | jq --unbuffered -r '[.uuid, .major] | @tsv' | while read -r -t "$DUTY_CYCLE" uuid temperature; do
-		((cycle < EPOCHSECONDS)) || continue
+		((cycle < EPOCHSECONDS && temperature > 32 && temperature < 160)) || continue
 		color=${colors[${uuid:6:1}]}
 		[[ "$color" == "$COLOR" ]] || continue
-		desired=$(<"$CONFIG/$color")
+		desired=$(<"$CONFIG/$color") || continue
 		cooler=$((temperature > desired))
 		heater=$((temperature < desired))
 		((cooling != cooler)) && {
