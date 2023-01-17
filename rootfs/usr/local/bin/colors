@@ -1,0 +1,9 @@
+# this file is evaluated by bash and python
+colors[1]="RED"
+colors[2]="GREEN"
+colors[3]="BLACK"
+colors[4]="PURPLE"
+colors[5]="ORANGE"
+colors[6]="BLUE"
+colors[7]="YELLOW"
+colors[8]="PINK"

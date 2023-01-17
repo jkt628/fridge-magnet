@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 PROG=${0##*/}
+DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 # configuration
 : "${COLOR=${1:-BLUE}}"
 : "${DUTY_CYCLE:=120}"
 : "${SCANNER=${2:-tiltscan}}"
 : "${CONFIG:=$HOME/.config/jkt628/temperature}"
+declare -A colors
+source "$DIR/colors"
 
 declare -a bool=(off on)
-declare -a colors=(
-	[1]=RED
-	[2]=GREEN
-	[3]=BLACK
-	[4]=PURPLE
-	[5]=ORANGE
-	[6]=BLUE
-	[7]=YELLOW
-	[8]=PINK
-)
 declare -A ifttt=(
 	[BLUE, cooler, off]=https://maker.ifttt.com/trigger/turn_off_fridge/with/key/${IFTTT_KEY}
 	[BLUE, cooler, on]=https://maker.ifttt.com/trigger/turn_on_fridge/with/key/${IFTTT_KEY}

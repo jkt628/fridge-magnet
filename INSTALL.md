@@ -16,6 +16,7 @@ sudo sdm --customize --L10n --restart --batch \
   --wpa secrets/wpa_supplicant.conf --wifi-country us \
   --user jkt --password-user $JKT_PASSWORD --autologin --redact \
   --hdmi-force-hotplug --hdmi-ignore-edid --hdmigroup 2 --hdmimode 87 --bootconfig 'hdmi_drive:2' --bootadd 'hdmi_cvt:1024 600 60 6 0 0 0' \
+  --dtoverlay 'w1-gpio' \
   --ssh socket \
   --cscript custom-phase.bash \
   --poptions xapps --xapps barrier \

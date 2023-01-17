@@ -1,0 +1,58 @@
+#!/home/jkt/.pyenv/versions/3.11.1/bin/python3.11 -u
+"""Scan for DS18B20 1-wire temperature sensors.
+Periodically output a JSON string suitable for https://github.com/baronbrew/TILTpi.
+
+Note that uuid[6] determines color so a unique color is assigned to newly found sensors.
+"""
+
+W1 = "/sys/bus/w1/devices/"
+
+def init():
+	from glob import glob
+	from os import getenv
+	from os.path import abspath, dirname
+
+	CONFIG = getenv("HOME") + "/.config/jkt628/temperature"
+	DIR = dirname(abspath(__file__))
+	colors={}
+	with open(DIR + "/colors") as fd:
+		exec(fd.read())
+	color_map = {v: k for k, v in colors.items()}
+	sensors={}
+	try:
+		with open(CONFIG + "/DS18B20") as fd:
+			exec(fd.read())
+	except FileNotFoundError as e:
+		pass
+	found = glob("28-*", root_dir=W1)
+
+	# assign color to new sensors
+	for s in found:
+		if not s in sensors:
+			sensors[s] = [f for f in ["RED", "GREEN", "YELLOW", "BLACK"] if f not in sensors][0]
+			with (open(CONFIG + "/DS18B20", "w")) as fd:
+				for k, v in sensors.items():
+					fd.write(f'sensors["{k}"]="{v}"\n')
+
+	return {k: "a495bb" + str(color_map[v]) + "0c5b14b44b5121370f02d74de" for k, v in sensors.items()}
+
+def main(sensors):
+	from json import dumps
+	from time import sleep
+	while True:
+		for sensor, uuid in sensors.items():
+			with open(W1 + sensor + "/temperature") as fd:
+				C = int(fd.read()) # is thousandths of a degree
+			record = {
+				"uuid": uuid,
+				"major": (C * 18 + 320000) // 10000, # convert to F with only integer math
+				"minor": 1000, # specific gravity, unused
+				"tx_power": 0, # weeks since battery changed, unused
+				"rssi": -59,
+				"mac": ":".join(sensor[i:i+2] for i in range(3, len(sensor), 2)),
+			}
+			print(dumps(record))
+		sleep(10)
+
+if __name__ == "__main__":
+	main(init())
