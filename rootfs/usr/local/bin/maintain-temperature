@@ -13,6 +13,8 @@ declare -a bool=(off on)
 declare -A ifttt=(
 	[BLUE, cooler, off]=https://maker.ifttt.com/trigger/turn_off_fridge/with/key/${IFTTT_KEY}
 	[BLUE, cooler, on]=https://maker.ifttt.com/trigger/turn_on_fridge/with/key/${IFTTT_KEY}
+	[RED, heater, off]=https://maker.ifttt.com/trigger/turn_off_mash_heater/with/key/${IFTTT_KEY}
+	[RED, heater, on]=https://maker.ifttt.com/trigger/turn_on_mash_heater/with/key/${IFTTT_KEY}
 )
 cycle=0
 cooling=2 heating=2 # unknown state at start
@@ -25,6 +27,16 @@ turn_off_BLUE_cooler() {
 
 turn_on_BLUE_cooler() {
 	curl -w '\n' "${ifttt[BLUE, cooler, on]}"
+}
+
+
+turn_off_RED_heater() {
+	curl -w '\n' "${ifttt[RED, heater, off]}"
+}
+
+
+turn_on_RED_heater() {
+	curl -w '\n' "${ifttt[RED, heater, on]}"
 }
 
 
