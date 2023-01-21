@@ -29,7 +29,7 @@ turn_on_BLUE_cooler() {
 
 
 for (( ; ; )); do
-	"$SCANNER" | jq --unbuffered -r '[.uuid, .major] | @tsv' | while read -r -t "$DUTY_CYCLE" uuid temperature; do
+	"$SCANNER" | jq --unbuffered -r '[.uuid, .major] | @tsv' | while read -r -t $((DUTY_CYCLE + 5)) uuid temperature; do
 		((cycle < EPOCHSECONDS && temperature > 32 && temperature < 160)) || continue
 		color=${colors[${uuid:6:1}]}
 		[[ "$color" == "$COLOR" ]] || continue
