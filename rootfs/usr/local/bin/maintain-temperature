@@ -3,8 +3,8 @@ PROG=${0##*/}
 DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 # configuration
 : "${COLOR=${1:-BLUE}}"
-: "${DUTY_CYCLE:=120}"
-: "${SCANNER=${2:-tiltscan}}"
+: "${DUTY_CYCLE=${2:-120}}"
+: "${SCANNER:=multiscan}"
 : "${CONFIG:=$HOME/.config/jkt628/temperature}"
 declare -A colors
 source "$DIR/colors"
