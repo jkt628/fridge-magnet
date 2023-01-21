@@ -7,6 +7,7 @@ Note that uuid[6] determines color so a unique color is assigned to newly found 
 
 W1 = "/sys/bus/w1/devices/"
 
+
 def init():
 	from glob import glob
 	from os import getenv
@@ -14,11 +15,11 @@ def init():
 
 	CONFIG = getenv("HOME") + "/.config/jkt628/temperature"
 	DIR = dirname(abspath(__file__))
-	colors={}
+	colors = {}
 	with open(DIR + "/colors") as fd:
 		exec(fd.read())
 	color_map = {v: k for k, v in colors.items()}
-	sensors={}
+	sensors = {}
 	try:
 		with open(CONFIG + "/DS18B20") as fd:
 			exec(fd.read())
@@ -29,7 +30,9 @@ def init():
 	# assign color to new sensors
 	for s in found:
 		if not s in sensors:
-			sensors[s] = [f for f in ["RED", "GREEN", "YELLOW", "BLACK"] if f not in sensors][0]
+			sensors[s] = [
+			    f for f in ["RED", "GREEN", "YELLOW", "BLACK"] if f not in sensors
+			][0]
 			with (open(CONFIG + "/DS18B20", "w")) as fd:
 				for k, v in sensors.items():
 					fd.write(f'sensors["{k}"]="{v}"\n')
@@ -45,6 +48,7 @@ def init():
 		}
 	return sensors
 
+
 def main(sensors):
 	from json import dumps
 	from time import sleep
@@ -56,6 +60,7 @@ def main(sensors):
 				v["major"] = (C * 18 + 320000) // 10000
 				print(dumps(v))
 		sleep(10)
+
 
 if __name__ == "__main__":
 	main(init())
