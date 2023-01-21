@@ -34,24 +34,27 @@ def init():
 				for k, v in sensors.items():
 					fd.write(f'sensors["{k}"]="{v}"\n')
 
-	return {k: "a495bb" + str(color_map[v]) + "0c5b14b44b5121370f02d74de" for k, v in sensors.items()}
+	for k, v in sensors.items():
+		sensors[k] = {
+		    "uuid": "a495bb" + str(color_map[v]) + "0c5b14b44b5121370f02d74de",
+		    "major": 68,
+		    "minor": 1000,  # specific gravity, unused
+		    "tx_power": 0,  # weeks since battery changed, unused
+		    "rssi": -59,
+		    "mac": ":".join(k[i:i + 2] for i in range(3, len(k), 2)),
+		}
+	return sensors
 
 def main(sensors):
 	from json import dumps
 	from time import sleep
 	while True:
-		for sensor, uuid in sensors.items():
-			with open(W1 + sensor + "/temperature") as fd:
-				C = int(fd.read()) # is thousandths of a degree
-			record = {
-				"uuid": uuid,
-				"major": (C * 18 + 320000) // 10000, # convert to F with only integer math
-				"minor": 1000, # specific gravity, unused
-				"tx_power": 0, # weeks since battery changed, unused
-				"rssi": -59,
-				"mac": ":".join(sensor[i:i+2] for i in range(3, len(sensor), 2)),
-			}
-			print(dumps(record))
+		for k, v in sensors.items():
+			with open(W1 + k + "/temperature") as fd:
+				C = int(fd.read())  # is thousandths of a degree
+				# convert to F with only integer math
+				v["major"] = (C * 18 + 320000) // 10000
+				print(dumps(v))
 		sleep(10)
 
 if __name__ == "__main__":
