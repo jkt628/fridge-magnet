@@ -10,27 +10,15 @@ function loadparams() {
 pfx=$(basename "$0")
 loadparams
 
-chpi() {
-  rmdir "/home/$myuser"
-  groupmod --new-name "$myuser" pi
-  usermod --login "$myuser" pi
-  usermod --home "/home/$myuser" --move-home --append --groups ssh "$myuser"
-}
-
 phase0() {
-  logtoboth "* $pfx rename user pi"
-  export myuser passworduser
-  export -f chpi
-  chroot "$SDMPT" bash -vxc chpi
   logtoboth "* $pfx install overlay"
   mapfile -d '' files < <(cd rootfs && find . -print0 \( -type f -o -type l \))
-  for ((i=${#files[@]}; --i>=0; )); do
-    local args=() file="${files[$i]}"
+	for file in "${files[@]}"; do
+    local args=()
     case "$file" in
-      *wpa_supplicant*) continue;;
       */home/jkt/*) args=(--owner=1000 --group=1000);;&
       */etc/ssh/*) args=(--mode=600);;&
-      */.gitignore) install -d "${args[@]}" "${file%/.gitignore}"; continue;;
+      */.gitignore) install -d "${args[@]}" "${file%/.gitignore}";;
       *) install "${args[@]}" -D "rootfs/$file" "$SDMPT/$file";;
     esac
   done
@@ -42,7 +30,7 @@ phase1() {
 }
 
 postinstall() {
-  pip install bleak construct
+	find / -mount -type f -name regenerate_ssh_host_keys\* -exec rm {} +
 }
 
 case "$1" in
