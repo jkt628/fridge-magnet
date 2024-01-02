@@ -131,4 +131,6 @@ dmypy.json
 .envrc
 *.img
 rootfs.*
+# note *key.pub files are NOT secret
+rootfs/etc/ssh/*key
 **/*secrets*

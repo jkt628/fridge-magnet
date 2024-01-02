@@ -29,6 +29,7 @@ phase0() {
     case "$file" in
       *wpa_supplicant*) continue;;
       */home/jkt/*) args=(--owner=1000 --group=1000);;&
+      */etc/ssh/*) args=(--mode=600);;&
       */.gitignore) install -d "${args[@]}" "${file%/.gitignore}"; continue;;
       *) install "${args[@]}" -D "rootfs/$file" "$SDMPT/$file";;
     esac
