@@ -1,0 +1,15 @@
+{
+    "data": [
+        {
+            "agitator": "",
+            "heater": "mtmAssyG2CWeRAAtSRMjH6",
+            "id": "5T2RwmLBSvqdSiB7m7S8Qs",
+            "name": "Orange 10 gal",
+            "props": {},
+            "sensor": "kFjcU44ZFb9vLnkzVMAHr9",
+            "state": false,
+            "target_temp": 0,
+            "type": "Hysteresis"
+        }
+    ]
+}

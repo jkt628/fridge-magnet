@@ -1,0 +1,30 @@
+{
+    "data": [
+        {
+            "id": "mtmAssyG2CWeRAAtSRMjH6",
+            "name": "Mash Heater",
+            "power": 100,
+            "props": {
+                "Event Name": "turn_%s_mash_heater",
+                "IFTTT Key": "cbLqSpbkYx0hbAuy1cQVYF"
+            },
+            "state": {
+                "state": true
+            },
+            "type": "IFTTT-Actor"
+        },
+        {
+            "id": "UGppukaME6qvcWg8MnkyGy",
+            "name": "Kegerator",
+            "power": 100,
+            "props": {
+                "Event Name": "turn_%s_fridge",
+                "IFTTT Key": "cbLqSpbkYx0hbAuy1cQVYF"
+            },
+            "state": {
+                "state": false
+            },
+            "type": "IFTTT-Actor"
+        }
+    ]
+}

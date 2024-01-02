@@ -1,0 +1,36 @@
+{
+    "data": [
+        {
+            "id": "Zzq34TymVEYWX3rDJJ5tKb",
+            "name": "TILT Blue - Temperature",
+            "props": {
+                "Data Type": "Temperature",
+                "Sensor color": "Blue"
+            },
+            "state": false,
+            "type": "BLE Hydrom"
+        },
+        {
+            "id": "AXoyD8fPsPFUgS6rhvRDeo",
+            "name": "TILT Blue - SG",
+            "props": {
+                "Data Type": "Gravity",
+                "Gravity Units": "SG",
+                "Sensor color": "Blue"
+            },
+            "state": false,
+            "type": "BLE Hydrom"
+        },
+        {
+            "id": "kFjcU44ZFb9vLnkzVMAHr9",
+            "name": "Wired RED",
+            "props": {
+                "Interval": 5,
+                "ReducedLogging": "60",
+                "Sensor": "28-3cb2f64935aa"
+            },
+            "state": false,
+            "type": "OneWire"
+        }
+    ]
+}

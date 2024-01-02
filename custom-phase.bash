@@ -30,8 +30,25 @@ phase1() {
 	apt -y remove --purge nano
 }
 
+cbpi4() {
+	pipx install --system-site-packages cbpi4
+	pipx ensurepath
+	pipx runpip cbpi4 install async_timeout https://github.com/avollkopf/cbpi4-BLEHydrom/archive/main.zip https://github.com/jkt628/cbpi4-IFTTT-Actor/archive/main.zip
+	cbpi setup
+}
+
 postinstall() {
 	find / -mount -type f -name regenerate_ssh_host_keys\* -exec rm {} +
+	logtoboth "* $pfx install cbpi4"
+	sudo -u jkt bash -c "cd; $(declare -f cbpi4); cbpi4"
+	cat >/etc/sdm/0piboot/099-cbpi.sh <<'EOF'
+#!/usr/bin/env bash
+cbpi099() {
+  cbpi autostart on
+  cbpi chromium on
+}
+sudo -u jkt bash -c "cd; $(declare -f cbpi099); cbpi099" 2>&1 | systemd-cat -t 099-cbpi.sh
+EOF
 }
 
 case "$1" in

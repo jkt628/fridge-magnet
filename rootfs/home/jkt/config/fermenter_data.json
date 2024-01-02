@@ -1,0 +1,23 @@
+{
+    "data": [
+        {
+            "brewname": "foo",
+            "cooler": "UGppukaME6qvcWg8MnkyGy",
+            "description": null,
+            "heater": "",
+            "id": "BfEEZNh53VJcq9z8g4Dwyv",
+            "name": "carboy",
+            "pressure_sensor": "",
+            "props": {
+                "sensor2": "AXoyD8fPsPFUgS6rhvRDeo"
+            },
+            "sensor": "Zzq34TymVEYWX3rDJJ5tKb",
+            "state": false,
+            "steps": [],
+            "target_pressure": "",
+            "target_temp": "54",
+            "type": "Fermenter Hysteresis",
+            "valve": ""
+        }
+    ]
+}
