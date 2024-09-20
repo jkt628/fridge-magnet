@@ -3,7 +3,7 @@
 ## download an image from the [Raspberry Pi OS downloads](https://www.raspberrypi.com/software/operating-systems)
 
 ```bash
-IMG=$(basename -s .xz $(ls ~/Downloads/*-raspios-*.img* | tail -1))
+IMG=$(basename -s .xz $(ls ~/Downloads/*-raspios-*arm64.img* | tail -1))
 xz -d -c <~/Downloads/$IMG.xz >$IMG
 ```
 
