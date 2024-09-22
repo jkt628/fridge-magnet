@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+DIR=/etc/sdm/assets/runscript
+
+phase1() {
+	curl -fsSL get.docker.com | sh
+
+	# see https://github.com/home-assistant/os-agent
+	latest=$(curl -s https://api.github.com/repos/home-assistant/os-agent/releases/latest | jq -r .tag_name)
+	wget -O $DIR/os-agent.deb "https://github.com/home-assistant/os-agent/releases/download/${latest}/os-agent_${latest}_linux_aarch64.deb"
+
+	# see https://github.com/home-assistant/supervised-installer
+	wget -O $DIR/homeassistant-supervised.deb https://github.com/home-assistant/supervised-installer/releases/latest/download/homeassistant-supervised.deb
+}
+
+firstboot() {
+	MACHINE=raspberrypi4-64 DEBIAN_FRONTEND=noninteractive apt install -y $DIR/{os-agent,homeassistant-supervised}.deb
+	rm -f $DIR/{os-agent,homeassistant-supervised}.deb
+	grep -q apparmor /boot/firmware/cmdline.txt || sed -i -e 's/$/ apparmor=1 security=apparmor/' /boot/firmware/cmdline.txt
+}
+
+case $1 in
+1) phase1 ;;
+firstboot) firstboot ;;
+esac

@@ -12,8 +12,8 @@ xz -d -c <~/Downloads/$IMG.xz >$IMG
 ```bash
 mkdir -p secrets
 envsubst <fridge-magnet.conf >secrets/fridge-magnet.conf
-sudo sdm --customize --restart --batch \
-  --extend --xmb 512 \
+sudo sdm --customize --restart --batch --logwidth 99999999 \
+  --extend --xmb 1024 \
   --autologin \
   --cscript custom-phase.bash \
   --plugins @secrets/fridge-magnet.conf \
