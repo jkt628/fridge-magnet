@@ -48,6 +48,8 @@ cbpi099() {
 }
 sudo -u jkt bash -c "cd; $(declare -f cbpi099); cbpi099" 2>&1 | systemd-cat -t 099-cbpi.sh
 EOF
+	apt install -y systemd-resolved
+	systemctl enable --now systemd-resolved
 }
 
 case "$1" in
