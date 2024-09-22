@@ -27,7 +27,6 @@ phase0() {
 phase1() {
 	logtoboth "* $pfx disable dtoverlay"
 	sed -i -e '/vc4-kms-v3d/s/^/#/' /boot/config.txt
-	apt -y remove --purge nano
 }
 
 cbpi4() {
